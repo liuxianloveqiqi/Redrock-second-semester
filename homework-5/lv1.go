@@ -81,9 +81,7 @@ func Ping(url string, size int, count int) {
 	delayTimes := []float64{}
 	// 统计丢包的次数，用于计算丢包率
 	dropPack := 0
-	maxTime := 3000.0
-	minTime := 0.0
-	avgTime := 0.0
+	var minTime, avgTime, maxTime float64
 	for i := count; i > 0; i-- {
 
 		// 向目标地址发送二进制报文包,如果发送失败就dropPack++
@@ -114,7 +112,7 @@ func Ping(url string, size int, count int) {
 		if dur > minTime {
 			minTime = dur
 		}
-		fmt.Printf("来自 %s 的回复: 字节 = %d byte 时间 = %.3fms\n", addr.String(), len, dur)
+		fmt.Printf("来自 %s 的回复: 字节 = %d byte 时间 = %.2fms\n", addr.String(), len, dur)
 
 	}
 	fmt.Printf("%s 的 Ping 统计信息:", addr.String())
@@ -126,6 +124,7 @@ func Ping(url string, size int, count int) {
 		for _, n := range delayTimes {
 			sum += n
 		}
+		// 计算平均延迟时间
 		avgTime = sum / float64(len(delayTimes))
 	}
 	fmt.Print("往返行程的估计时间(以毫秒为单位):\n")
