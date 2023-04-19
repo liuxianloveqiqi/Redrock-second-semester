@@ -21,15 +21,15 @@
 * user
     * api 提供用户登录协议
     
-      ![image-20230419142119775](/Users/liuxian/Pictures/typora图片/image-20230419142119775.png)
+ <img width="878" alt="image-20230419154606359" src="https://user-images.githubusercontent.com/117006076/233051723-b82fe56e-3a0f-4a48-bf65-3064bc58615d.png">
+
     
     * rpc 供search服务访问用户数据
     
 * search
     * api 提供图书查询协议
     
-      ![image-20230419154649253](/Users/liuxian/Pictures/typora图片/image-20230419154649253.png)
-
+<img width="881" alt="image-20230419154649253" src="https://user-images.githubusercontent.com/117006076/233051620-a2328601-18da-4675-bab4-c2bf10bb25b2.png">
 > [!TIP]
 > 这个微小的图书借阅查询系统虽然小，从实际来讲不太符合业务场景，但是仅上面两个功能，已经满足我们对go-zeroapi/rpc的场景演示了，
 > 后续为了满足更丰富的go-zero功能演示，会在文档中进行业务插入即相关功能描述。这里仅用一个场景进行引入。
