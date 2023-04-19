@@ -31,6 +31,4 @@
     * api 提供图书查询协议
     
 <img width="881" alt="image-20230419154649253" src="https://user-images.githubusercontent.com/117006076/233051620-a2328601-18da-4675-bab4-c2bf10bb25b2.png">
-> [!TIP]
-> 这个微小的图书借阅查询系统虽然小，从实际来讲不太符合业务场景，但是仅上面两个功能，已经满足我们对go-zeroapi/rpc的场景演示了，
-> 后续为了满足更丰富的go-zero功能演示，会在文档中进行业务插入即相关功能描述。这里仅用一个场景进行引入。
+     接口文档地址：https://console-docs.apipost.cn/preview/eb9fcbf2b63903fe/8b9df0d37bc369f3<br>这个微小的图书借阅查询系统虽然小，从实际来讲不太符合业务场景，但是仅上面两个功能，已经满足我们对go-zeroapi/rpc的场景演示了，<br>后续为了满足更丰富的go-zero功能演示，会在文档中进行业务插入即相关功能描述。这里仅用一个场景进行引入。  
