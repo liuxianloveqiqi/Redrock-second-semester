@@ -21,7 +21,8 @@
 * user
     * api 提供用户登录协议
     
- <img width="878" alt="image-20230419154606359" src="https://user-images.githubusercontent.com/117006076/233051723-b82fe56e-3a0f-4a48-bf65-3064bc58615d.png">
+<img width="880" alt="image-20230419142119775" src="https://user-images.githubusercontent.com/117006076/233058389-c342adb9-6b02-4420-9a39-d8adde75417a.png">
+
 
     
     * rpc 供search服务访问用户数据
