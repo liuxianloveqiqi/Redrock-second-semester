@@ -1,0 +1,17 @@
+type SearchReq {
+	Id string `json:"id"`
+}
+
+type SearchReply {
+	Id      string `json:"id"`
+	Name    string `json:"name"`
+	Message string `json:"message"`
+}
+
+@server(
+	middleware: JWT // 路由中间件声明
+)
+service search-api {
+	@handler search
+	post /search/do (SearchReq) returns (SearchReply)
+}
