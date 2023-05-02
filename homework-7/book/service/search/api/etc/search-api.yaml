@@ -1,0 +1,17 @@
+Name: search-api
+Host: 0.0.0.0
+Port: 8889
+Mysql:
+  DataSource: root:123456@(43.139.195.17:8686)/go-zero?charset=utf8mb4&parseTime=True&loc=Asia%2FShanghai
+CacheRedis:
+  - Host: 43.139.195.17:6333
+    Pass:
+    Type: node
+Auth:
+  AccessSecret: "liuxian123"
+  RefreshSecret: "123456789"
+UserRpc:
+  Etcd:
+    Hosts:
+      - 43.139.195.17:2379
+    Key: user.rpc

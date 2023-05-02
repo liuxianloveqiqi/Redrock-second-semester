@@ -1,0 +1,12 @@
+Name: user.rpc
+ListenOn: 0.0.0.0:8080
+Etcd:
+  Hosts:
+  - 43.139.195.17:2379
+  Key: user.rpc
+Mysql:
+  DataSource: root:123456@(43.139.195.17:8686)/go-zero?charset=utf8mb4&parseTime=True&loc=Asia%2FShanghai
+CacheRedis:
+  - Host: 43.139.195.17:6333
+    Pass:
+    Type: node
