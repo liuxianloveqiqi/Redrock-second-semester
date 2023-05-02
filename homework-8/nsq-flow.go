@@ -73,6 +73,7 @@ func main() {
 
 	// 停止生产者
 	producer.Stop()
+
 	// 停止消费者
 	for _, consumer := range consumers {
 		consumer.Stop()
