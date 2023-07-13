@@ -6,7 +6,6 @@ import (
 	"strconv"
 )
 
-// JSON 将Go数据结构转换为JSON格式的字节切片
 func JSON(data interface{}) ([]byte, error) {
 	// 利用反射获取数据的类型
 	dataType := reflect.TypeOf(data)
@@ -19,22 +18,22 @@ func JSON(data interface{}) ([]byte, error) {
 		return []byte(strconv.Quote(str)), nil
 
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		// 如果是整数类型，则将其转换为字符串并返回JSON格式的字符串
+		// 整数类型
 		num := reflect.ValueOf(data).Int()
 		return []byte(strconv.FormatInt(num, 10)), nil
 
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		// 如果是无符号整数类型，则将其转换为字符串并返回JSON格式的字符串
+		// 无符号整数类型
 		num := reflect.ValueOf(data).Uint()
 		return []byte(strconv.FormatUint(num, 10)), nil
 
 	case reflect.Float32, reflect.Float64:
-		// 如果是浮点数类型，则将其转换为字符串并返回JSON格式的字符串
+		// 浮点数类型
 		num := reflect.ValueOf(data).Float()
 		return []byte(strconv.FormatFloat(num, 'f', -1, 64)), nil
 
 	case reflect.Bool:
-		// 如果是布尔类型，则返回JSON格式的布尔值
+		// 布尔类型
 		b := reflect.ValueOf(data).Bool()
 		if b {
 			return []byte("true"), nil
@@ -42,12 +41,12 @@ func JSON(data interface{}) ([]byte, error) {
 		return []byte("false"), nil
 
 	default:
-		// 对于其他复杂类型，递归处理字段，并构建JSON格式的字节切片
+		// 对于其他复杂类型，递归处理字段
 		return handleComplexType(data)
 	}
 }
 
-// handleComplexType 处理复杂类型的序列化
+// 处理复杂类型的序列化
 func handleComplexType(data interface{}) ([]byte, error) {
 	// 获取数据的值和类型
 	value := reflect.ValueOf(data)
