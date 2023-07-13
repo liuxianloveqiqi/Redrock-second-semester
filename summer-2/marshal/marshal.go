@@ -7,13 +7,13 @@ import (
 )
 
 func JSON(data interface{}) ([]byte, error) {
-	// 利用反射获取数据的类型
+	// 先利用反射获取数据的类型
 	dataType := reflect.TypeOf(data)
 
 	// 根据数据类型选择对应的序列化方式
 	switch dataType.Kind() {
 	case reflect.String:
-		// 如果是字符串类型，则直接转义并返回JSON格式的字符串
+		// 字符串类型
 		str := data.(string)
 		return []byte(strconv.Quote(str)), nil
 
