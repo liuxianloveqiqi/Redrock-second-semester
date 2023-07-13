@@ -12,7 +12,7 @@ func UnJSON(data []byte, v interface{}) error {
 	// 将传入的v参数转换为结构体指针
 	ptr, ok := v.(*model.Person)
 	if !ok {
-		return errors.New("只支持解析*Person 类型")
+		return errors.New("只支持解析*Person类型")
 	}
 
 	// 解析JSON字符串的索引位置
@@ -21,22 +21,22 @@ func UnJSON(data []byte, v interface{}) error {
 	// 跳过空白字符
 	skipWhitespace(data, &index)
 
-	// 检查 JSON 字符串是否以左花括号开始
+	// 检查是否以左花括号开始
 	if data[index] != '{' {
-		return errors.New("JSON 字符串必须以左花括号开始")
+		return errors.New("JSON字符串必须以左花括号开始")
 	}
 	index++
 
-	// 解析 JSON 键值对
+	// 解析JSON键值对
 	for {
 		skipWhitespace(data, &index)
 
-		// 检查是否到达了 JSON 字符串的末尾
+		// 检查是否到达了JSON字符串的末尾
 		if index >= len(data) {
 			return errors.New("JSON字符串不完整")
 		}
 
-		// 检查是否到达了 JSON 对象的结束符号
+		// 检查是否到达了的结束符号
 		if data[index] == '}' {
 			break
 		}
@@ -77,9 +77,9 @@ func UnJSON(data []byte, v interface{}) error {
 		}
 	}
 
-	// 检查 JSON 字符串是否以右花括号结束
+	// 检查是否以右花括号结束
 	if data[index] != '}' {
-		return errors.New("JSON 字符串必须以右花括号结束")
+		return errors.New("JSON字符串必须以右花括号结束")
 	}
 
 	return nil
@@ -126,14 +126,14 @@ func skipValue(data []byte, index *int) {
 	}
 }
 
-// 辅助函数：跳过空白字符
+// 跳过空白字符
 func skipWhitespace(data []byte, index *int) {
 	for *index < len(data) && unicode.IsSpace(rune(data[*index])) {
 		*index++
 	}
 }
 
-// 辅助函数：解析字符串
+// 解析字符串
 func parseString(data []byte, index *int) (string, error) {
 	// 跳过初始引号
 	*index++
@@ -151,7 +151,7 @@ func parseString(data []byte, index *int) (string, error) {
 	return "", errors.New("JSON 字符串不完整")
 }
 
-// 辅助函数：解析整数
+// 解析整数
 func parseInt(data []byte, index *int) (int, error) {
 	start := *index
 	for *index < len(data) {
@@ -166,5 +166,5 @@ func parseInt(data []byte, index *int) (int, error) {
 		*index++
 	}
 
-	return 0, errors.New("JSON 字符串不完整")
+	return 0, errors.New("JSON字符串不完整")
 }
