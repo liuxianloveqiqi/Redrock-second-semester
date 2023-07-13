@@ -7,11 +7,76 @@ import (
 )
 
 func JSON(data interface{}) ([]byte, error) {
-	// 先利用反射获取数据的类型
+	// 先利用反射获取数据的类型和值
 	dataType := reflect.TypeOf(data)
-
+	value := reflect.ValueOf(data)
 	// 根据数据类型选择对应的序列化方式
 	switch dataType.Kind() {
+	case reflect.Slice, reflect.Array:
+		// 切片或数组类型
+		buffer := bytes.Buffer{}
+		buffer.WriteString("[")
+		// 递归序列化切片或数组的每个元素
+		for i := 0; i < value.Len(); i++ {
+			// 递归调用JSON函数对每个元素进行序列化
+			elemData, err := JSON(value.Index(i).Interface())
+			if err != nil {
+				return nil, err
+			}
+			// 追加到buffer
+			buffer.Write(elemData)
+			// 添加逗号分隔符
+			if i < value.Len()-1 {
+				buffer.WriteString(",")
+			}
+		}
+		// 添加最右方括号
+		buffer.WriteString("]")
+
+		return buffer.Bytes(), nil
+
+	case reflect.Map:
+		// map类型
+		buffer := bytes.Buffer{}
+		buffer.WriteString("{")
+		// 获取map所有的key
+		keys := value.MapKeys()
+
+		for i := 0; i < len(keys); i++ {
+			// 获取 map 的键和值
+			key := keys[i]
+			value := value.MapIndex(key)
+
+			// 对键进行序列化
+			keyData, err := JSON(key.Interface())
+			if err != nil {
+				return nil, err
+			}
+
+			// 对值进行序列化
+			valueData, err := JSON(value.Interface())
+			if err != nil {
+				return nil, err
+			}
+
+			// 将序列化后的键和值添加到缓冲区中，并添加引号
+			// 使用 strconv.Quote将键序列化为一个带有引号的字符串
+			buffer.WriteString(strconv.Quote(string(keyData)))
+			// 用":"隔开
+			buffer.WriteString(":")
+			// 同理给值加引号
+			buffer.WriteString(strconv.Quote(string(valueData)))
+
+			// 如果不是最后一个键值对，就用逗号进行分隔
+			if i < len(keys)-1 {
+				buffer.WriteString(",")
+			}
+		}
+
+		buffer.WriteString("}")
+
+		return buffer.Bytes(), nil
+
 	case reflect.String:
 		// 字符串类型
 		str := data.(string)

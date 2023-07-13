@@ -148,7 +148,7 @@ func parseString(data []byte, index *int) (string, error) {
 		*index++
 	}
 
-	return "", errors.New("JSON 字符串不完整")
+	return "", errors.New("JSON字符串不完整")
 }
 
 // 解析整数
