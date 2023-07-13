@@ -38,6 +38,7 @@ func main() {
 	fmt.Println(unData)
 
 	// 测试反序列化
+	// 调用官方序列化
 	jsonData, err = json.Marshal(p)
 	if err != nil {
 		panic(err)
