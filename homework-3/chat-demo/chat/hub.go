@@ -12,6 +12,8 @@ import (
 // Hub maintains the set of active clients and broadcasts messages to the
 // clients.
 type Hub struct {
+	// room id
+	id int64
 
 	// Registered clients.
 	clients map[*Client]bool
@@ -41,6 +43,7 @@ type Message struct {
 
 func NewHub() *Hub {
 	return &Hub{
+
 		broadcast:  make(chan []byte),
 		register:   make(chan *Client),
 		unregister: make(chan *Client),

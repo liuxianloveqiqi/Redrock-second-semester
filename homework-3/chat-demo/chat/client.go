@@ -50,6 +50,7 @@ var upgrader = websocket.Upgrader{
 
 // Client is a middleman between the websocket connection and the hub.
 type Client struct {
+	id  int64
 	hub *Hub
 
 	// The websocket connection.
@@ -97,7 +98,7 @@ func (c *Client) readPump() {
 			// 检测心跳，执行重连
 			err := c.conn.WriteMessage(websocket.PingMessage, nil)
 			if err != nil {
-				log.Printf("发送消息错误: %v", err)
+				log.Printf("掉线了，断开连接%v", err)
 				c.reconnect()
 				return
 			}
@@ -211,7 +212,7 @@ func (c *Client) reconnect() {
 			log.Println("重连成功")
 			go c.writePump()
 			go c.readPump()
-			// 成功后调出循环
+			// 成功跳调出循环
 			break
 
 		}

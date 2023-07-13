@@ -26,9 +26,7 @@ func main() {
 	flag.Parse()
 	hub := chat.NewHub()
 	go hub.Run()
-	go hub.Run()
-	go hub.Run()
-	go hub.Run()
+
 	http.HandleFunc("/", serveHome)
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		chat.ServeWs(hub, w, r)
