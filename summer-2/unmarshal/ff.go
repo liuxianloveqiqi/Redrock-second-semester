@@ -3,194 +3,128 @@ package unmarshal
 //
 //import (
 //	"errors"
-//	"reflect"
 //	"strconv"
+//	"unicode"
 //)
 //
-// UnJSON 反序列化JSON格式的字节切片为Go数据结构
-
-//
-//// 解析JSON值
-//func parseValue(data []byte, v reflect.Value) error {
-//	// 去除空白字符
-//	data = skipWhitespace(data)
-//
-//	// 根据值的类型进行解析
-//	switch data[0] {
-//	case '{':
-//		return parseObject(data, v)
-//	case '[':
-//		return parseArray(data, v)
-//	case '"':
-//		return parseString(data, v)
-//	case 't':
-//		return parseTrue(data, v)
-//	case 'f':
-//		return parseFalse(data, v)
-//	case 'n':
-//		return parseNull(data, v)
-//	default:
-//		return parseNumber(data, v)
+//// Unmarshal 函数用于将 JSON 字符串解析为结构体
+//func Unmarshal(data []byte, v interface{}) error {
+//	// 将传入的 v 参数转换为结构体指针
+//	ptr, ok := v.(*Person)
+//	if !ok {
+//		return errors.New("只支持解析 *Person 类型")
 //	}
-//}
 //
-//// 解析JSON对象
-//func parseObject(data []byte, v reflect.Value) error {
-//	// 创建一个空的 map[string]interface{}
-//	obj := make(map[string]interface{})
+//	// 解析 JSON 字符串的索引位置
+//	index := 0
 //
-//	// 跳过起始的"{"
-//	data = data[1:]
+//	// 跳过空白字符
+//	skipWhitespace(data, &index)
 //
+//	// 检查 JSON 字符串是否以左花括号开始
+//	if data[index] != '{' {
+//		return errors.New("JSON 字符串必须以左花括号开始")
+//	}
+//	index++
+//
+//	// 解析 JSON 键值对
 //	for {
-//		data = skipWhitespace(data)
+//		skipWhitespace(data, &index)
 //
-//		// 判断对象是否为空
-//		if len(data) == 0 || data[0] == '}' {
+//		// 检查是否到达了 JSON 字符串的末尾
+//		if index >= len(data) {
+//			return errors.New("JSON 字符串不完整")
+//		}
+//
+//		// 检查是否到达了 JSON 对象的结束符号
+//		if data[index] == '}' {
 //			break
 //		}
 //
 //		// 解析键
-//		key, err := parseString(data, nil)
+//		key, err := parseString(data, &index)
 //		if err != nil {
 //			return err
 //		}
 //
-//		data = skipWhitespace(key[1:])
-//		if len(data) == 0 || data[0] != ':' {
-//			return errors.New("无效的JSON对象")
+//		// 跳过冒号
+//		if data[index] != ':' {
+//			return errors.New("JSON 键值对缺少冒号")
 //		}
+//		index++
 //
 //		// 解析值
-//		fieldName := string(key[1 : len(key)-1])
-//		fieldValue := reflect.New(v.Type().Elem().FieldByName(fieldName).Type).Elem()
-//		err = parseValue(data[1:], fieldValue)
-//		if err != nil {
-//			return err
-//		}
-//
-//		// 将键值对存入对象
-//		obj[fieldName] = fieldValue.Interface()
-//
-//		data = skipWhitespace(data)
-//		if len(data) == 0 || data[0] == '}' {
-//			break
-//		} else if data[0] != ',' {
-//			return errors.New("无效的JSON对象")
-//		}
-//
-//		data = data[1:]
-//	}
-//
-//	// 将解析后的对象存入目标变量
-//	v.Set(reflect.ValueOf(obj))
-//
-//	return nil
-//}
-//// 跳过空白字符
-//func skipWhitespace(data []byte) []byte {
-//	i := 0
-//	for i < len(data) && (data[i] == ' ' || data[i] == '\t' || data[i] == '\n' || data[i] == '\r') {
-//		i++
-//	}
-//	return data[i:]
-//}
-//// 解析JSON字符串
-//func parseString(data []byte, v reflect.Value) ([]byte, error) {
-//	// 查找字符串的结束位置
-//	endIndex := 0
-//	for endIndex < len(data) && data[endIndex] != '"' {
-//		// 转义字符
-//		if data[endIndex] == '\\' {
-//			endIndex++
-//		}
-//		endIndex++
-//	}
-//
-//	if endIndex >= len(data) {
-//		return nil, errors.New("无效的JSON字符串")
-//	}
-//
-//	// 提取字符串内容
-//	str := data[0 : endIndex+1]
-//
-//	// 将解析后的字符串存入目标变量
-//	if v.IsValid() {
-//		v.SetString(string(str[1 : len(str)-1]))
-//	}
-//
-//	return str, nil
-//}
-//
-//// 解析JSON中的数字
-//func parseNumber(data []byte, v interface{}) error {
-//	// 查找数字的结束位置
-//	endIndex := 0
-//	for endIndex < len(data) && isValidNumberChar(data[endIndex]) {
-//		endIndex++
-//	}
-//
-//	if endIndex == 0 {
-//		return errors.New("无效的JSON数字")
-//	}
-//
-//	// 提取数字内容
-//	number := data[0:endIndex]
-//
-//	// 解析数字
-//	parsedNumber, err := parseNumberValue(number)
-//	if err != nil {
-//		return err
-//	}
-//
-//	// 将解析后的数字存入目标变量
-//	if v != nil {
-//		reflectValue := reflect.ValueOf(v).Elem()
-//
-//		switch reflectValue.Kind() {
-//		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-//			intValue, err := strconv.ParseInt(parsedNumber, 10, 64)
+//		if key == "name" {
+//			name, err := parseString(data, &index)
 //			if err != nil {
 //				return err
 //			}
-//			reflectValue.SetInt(intValue)
-//		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-//			uintValue, err := strconv.ParseUint(parsedNumber, 10, 64)
+//			ptr.Name = name
+//		} else if key == "age" {
+//			age, err := parseInt(data, &index)
 //			if err != nil {
 //				return err
 //			}
-//			reflectValue.SetUint(uintValue)
-//		case reflect.Float32, reflect.Float64:
-//			floatValue, err := strconv.ParseFloat(parsedNumber, 64)
-//			if err != nil {
-//				return err
-//			}
-//			reflectValue.SetFloat(floatValue)
-//		default:
-//			return errors.New("无效的目标变量类型")
+//			ptr.Age = age
+//		} else {
+//			// 忽略未知键
+//			skipValue(data, &index)
 //		}
+//
+//		// 跳过逗号
+//		if data[index] == ',' {
+//			index++
+//		}
+//	}
+//
+//	// 检查 JSON 字符串是否以右花括号结束
+//	if data[index] != '}' {
+//		return errors.New("JSON 字符串必须以右花括号结束")
 //	}
 //
 //	return nil
 //}
 //
-//// 检查字符是否是有效的数字字符
-//func isValidNumberChar(char byte) bool {
-//	return (char >= '0' && char <= '9') || char == '-' || char == '+' || char == '.' || char == 'e' || char == 'E'
+//// 辅助函数：跳过空白字符
+//func skipWhitespace(data []byte, index *int) {
+//	for *index < len(data) && unicode.IsSpace(rune(data[*index])) {
+//		*index++
+//	}
 //}
 //
-//// 解析数字字符串为对应的值
-//func parseNumberValue(number []byte) (string, error) {
-//	// 特殊情况：处理负数
-//	if len(number) > 1 && number[0] == '-' && number[1] == '0' {
-//		return string(number), errors.New("无效的JSON数字")
+//// 辅助函数：解析字符串
+//func parseString(data []byte, index *int) (string, error) {
+//	// 跳过初始引号
+//	*index++
+//
+//	start := *index
+//	for *index < len(data) {
+//		// 检查是否到达字符串结尾
+//		if data[*index] == '"' && data[*index-1] != '\\' {
+//			str := string(data[start:*index])
+//			*index++
+//			return str, nil
+//		}
+//		*index++
 //	}
 //
-//	// 检查是否为十进制数
-//	if number[0] == '0' && len(number) > 1 {
-//		return string(number), errors.New("无效的JSON数字")
-//	}
-//
-//	return string(number), nil
+//	return "", errors.New("JSON 字符串不完整")
 //}
 //
+//// 辅助函数：解析整数
+//func parseInt(data []byte, index *int) (int, error) {
+//	start := *index
+//	for *index < len(data) {
+//		// 检查是否到达整数结尾
+//		if !unicode.IsDigit(rune(data[*index])) {
+//			num, err := strconv.Atoi(string(data[start:*index]))
+//			if err != nil {
+//				return 0, errors.New("无效的整数")
+//			}
+//			return num, nil
+//		}
+//		*index++
+//	}
+//
+//	return 0, errors.New("JSON 字符串不完整")
+//}

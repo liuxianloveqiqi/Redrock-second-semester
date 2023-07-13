@@ -4,41 +4,49 @@ import (
 	"encoding/json"
 	"fmt"
 	"summer-2/marshal"
+	"summer-2/model"
 	"summer-2/unmarshal"
 )
 
+// 示例结构体
+type Person struct {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
+}
+
 func main() {
 	// 随便搞个结构体
-	p := marshal.Person{
+	p := Person{
 		Name: "liuxian",
 		Age:  18,
 	}
-	//// 序列化为JSON格式的字节切片
-	//jsonData, err := marshal.JSON(p)
-	//if err != nil {
-	//	fmt.Println("序列化失败:", err)
-	//	return
-	//}
-	//// 打印json数据
-	//fmt.Println(string(jsonData))
-	//unData := marshal.Person{}
-	//// 调用官方json反序列化包验证
-	//err = json.Unmarshal(jsonData, &unData)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//// 打印反序列化后数据
-	//fmt.Println(unData)
+	// 测试序列化
+	jsonData, err := marshal.JSON(p)
+	if err != nil {
+		fmt.Println("序列化失败:", err)
+		return
+	}
+	// 打印json数据
+	fmt.Println(string(jsonData))
+	unData := model.Person{}
+	// 调用官方json反序列化包验证
+	err = json.Unmarshal(jsonData, &unData)
+	if err != nil {
+		panic(err)
+	}
+	// 打印反序列化后数据
+	fmt.Println(unData)
 
-	jsondata, err := json.Marshal(p)
+	// 测试反序列化
+	jsonData, err = json.Marshal(p)
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
-	newunData := marshal.Person{}
-	fmt.Println(string(jsondata))
-	err = unmarshal.UnJSON(jsondata, &newunData)
+	newP := model.Person{}
+	// 调用自己的反序列化
+	err = unmarshal.UnJSON(jsonData, &newP)
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
-	fmt.Println(newunData)
+	fmt.Println(newP)
 }

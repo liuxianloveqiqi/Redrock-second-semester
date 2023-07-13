@@ -91,9 +91,3 @@ func handleComplexType(data interface{}) ([]byte, error) {
 
 	return buffer.Bytes(), nil
 }
-
-// 示例结构体
-type Person struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
-}
