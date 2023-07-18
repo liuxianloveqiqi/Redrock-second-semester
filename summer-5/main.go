@@ -128,12 +128,10 @@ func checkSchedule(schedule string) bool {
 }
 
 func main() {
-	// 示例使用
-
 	// 新建一个Cron引擎实例
 	cronEngine := NewCronEngine()
 
-	// 添加定时任务到Cron引擎
+	// 添加一个间隔执行任务到Cron引擎
 	cronEngine.AddJob(&CronJob{
 		Name:     "任务1",
 		Schedule: "*/1", // 每隔1分钟触发一次
@@ -142,9 +140,10 @@ func main() {
 		},
 	})
 
+	// 添加一个定时任务到Cron引擎
 	cronEngine.AddJob(&CronJob{
 		Name:     "任务2",
-		Schedule: "26", // 每小时的第5分钟触发
+		Schedule: "26", // 每小时的第26分钟触发
 		Func: func() {
 			fmt.Println("任务2正在运行", time.Now().Format("2006-01-02 15:04:05"))
 		},
